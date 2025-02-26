@@ -1,7 +1,7 @@
 import { users, type User, type InsertUser } from "@shared/schema";
-import { type Contact, type InsertContact } from "@shared/schema";
-import { type Service, type InsertService } from "@shared/schema";
-import { type Team, type InsertTeam } from "@shared/schema";
+import { type Contact, type InsertContact, contacts } from "@shared/schema";
+import { type Service, type InsertService, services } from "@shared/schema";
+import { type Team, type InsertTeam, team } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
