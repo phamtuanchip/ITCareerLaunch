@@ -2,6 +2,8 @@ import { users, type User, type InsertUser } from "@shared/schema";
 import { type Contact, type InsertContact } from "@shared/schema";
 import { type Service, type InsertService } from "@shared/schema";
 import { type Team, type InsertTeam } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -29,107 +31,95 @@ export interface IStorage {
   createContact(contact: InsertContact): Promise<Contact>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private services: Map<number, Service>;
-  private team: Map<number, Team>;
-  private contacts: Map<number, Contact>;
-  currentId: number;
-
-  constructor() {
-    this.users = new Map();
-    this.services = new Map();
-    this.team = new Map();
-    this.contacts = new Map();
-    this.currentId = 1;
-  }
-
+export class DatabaseStorage implements IStorage {
+  // Users
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.email === email,
-    );
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId++;
-    const user = { id, ...insertUser };
-    this.users.set(id, user);
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
   // Services
   async getServices(): Promise<Service[]> {
-    return Array.from(this.services.values());
+    return await db.select().from(services);
   }
 
   async getService(id: number): Promise<Service | undefined> {
-    return this.services.get(id);
+    const [service] = await db.select().from(services).where(eq(services.id, id));
+    return service;
   }
 
   async createService(insertService: InsertService): Promise<Service> {
-    const id = this.currentId++;
-    const service = { id, ...insertService };
-    this.services.set(id, service);
+    const [service] = await db.insert(services).values(insertService).returning();
     return service;
   }
 
   async updateService(id: number, updateService: InsertService): Promise<Service | undefined> {
-    if (!this.services.has(id)) return undefined;
-    const service = { id, ...updateService };
-    this.services.set(id, service);
+    const [service] = await db
+      .update(services)
+      .set(updateService)
+      .where(eq(services.id, id))
+      .returning();
     return service;
   }
 
   async deleteService(id: number): Promise<boolean> {
-    return this.services.delete(id);
+    const [deleted] = await db.delete(services).where(eq(services.id, id)).returning();
+    return !!deleted;
   }
 
   // Team members
   async getTeamMembers(): Promise<Team[]> {
-    return Array.from(this.team.values());
+    return await db.select().from(team);
   }
 
   async getTeamMember(id: number): Promise<Team | undefined> {
-    return this.team.get(id);
+    const [member] = await db.select().from(team).where(eq(team.id, id));
+    return member;
   }
 
   async createTeamMember(insertMember: InsertTeam): Promise<Team> {
-    const id = this.currentId++;
-    const member = { id, ...insertMember };
-    this.team.set(id, member);
+    const [member] = await db.insert(team).values(insertMember).returning();
     return member;
   }
 
   async updateTeamMember(id: number, updateMember: InsertTeam): Promise<Team | undefined> {
-    if (!this.team.has(id)) return undefined;
-    const member = { id, ...updateMember };
-    this.team.set(id, member);
+    const [member] = await db
+      .update(team)
+      .set(updateMember)
+      .where(eq(team.id, id))
+      .returning();
     return member;
   }
 
   async deleteTeamMember(id: number): Promise<boolean> {
-    return this.team.delete(id);
+    const [deleted] = await db.delete(team).where(eq(team.id, id)).returning();
+    return !!deleted;
   }
 
   // Contacts
   async getContacts(): Promise<Contact[]> {
-    return Array.from(this.contacts.values());
+    return await db.select().from(contacts);
   }
 
   async getContact(id: number): Promise<Contact | undefined> {
-    return this.contacts.get(id);
+    const [contact] = await db.select().from(contacts).where(eq(contacts.id, id));
+    return contact;
   }
 
   async createContact(insertContact: InsertContact): Promise<Contact> {
-    const id = this.currentId++;
-    const contact = { id, ...insertContact };
-    this.contacts.set(id, contact);
+    const [contact] = await db.insert(contacts).values(insertContact).returning();
     return contact;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
