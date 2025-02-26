@@ -3,6 +3,13 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { pgTable } from "drizzle-orm/pg-core";
 
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  isAdmin: text("is_admin").notNull().default("false"),
+});
+
 export const services = pgTable("services", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -23,6 +30,14 @@ export const contacts = pgTable("contacts", {
   email: text("email").notNull(),
   message: text("message").notNull(),
 });
+
+// User schemas
+export const insertUserSchema = createInsertSchema(users).extend({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = typeof users.$inferSelect;
 
 // Service schemas
 export const insertServiceSchema = createInsertSchema(services);
