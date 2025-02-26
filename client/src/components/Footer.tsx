@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { SiLinkedin, SiTwitter, SiFacebook } from "react-icons/si";
+import { SiLinkedin, SiX, SiFacebook } from "react-icons/si";
 
 export default function Footer() {
   return (
@@ -15,7 +15,7 @@ export default function Footer() {
               Empowering tech careers through quick, effective learning.
             </p>
           </div>
-          
+
           <div>
             <h3 className="font-semibold mb-4">Quick Links</h3>
             <div className="flex flex-col gap-2">
@@ -24,7 +24,7 @@ export default function Footer() {
               <Button variant="link" className="h-auto p-0">Contact</Button>
             </div>
           </div>
-          
+
           <div>
             <h3 className="font-semibold mb-4">Contact</h3>
             <p className="text-muted-foreground">
@@ -32,7 +32,7 @@ export default function Footer() {
               Phone: (555) 123-4567
             </p>
           </div>
-          
+
           <div>
             <h3 className="font-semibold mb-4">Follow Us</h3>
             <div className="flex gap-4">
@@ -40,7 +40,7 @@ export default function Footer() {
                 <SiLinkedin className="h-5 w-5" />
               </Button>
               <Button variant="ghost" size="icon">
-                <SiTwitter className="h-5 w-5" />
+                <SiX className="h-5 w-5" />
               </Button>
               <Button variant="ghost" size="icon">
                 <SiFacebook className="h-5 w-5" />
@@ -48,7 +48,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        
+
         <div className="mt-8 pt-8 border-t text-center text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} 5Minutes Education. All rights reserved.</p>
         </div>

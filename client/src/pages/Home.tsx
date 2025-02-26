@@ -13,6 +13,14 @@ import ServiceCard from "@/components/ServiceCard";
 import TeamCard from "@/components/TeamCard";
 import { Code2, BookOpen, Users, Rocket } from "lucide-react";
 
+// Assuming InsertContact type is defined elsewhere
+interface InsertContact {
+  name: string;
+  email: string;
+  message: string;
+}
+
+
 export default function Home() {
   const { toast } = useToast();
   const form = useForm({
@@ -25,7 +33,7 @@ export default function Home() {
   });
 
   const contactMutation = useMutation({
-    mutationFn: (data: typeof form.getValues) => 
+    mutationFn: (data: InsertContact) =>
       apiRequest("POST", "/api/contact", data),
     onSuccess: () => {
       toast({
@@ -44,7 +52,7 @@ export default function Home() {
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    contactMutation.mutate(data);
+    contactMutation.mutate(data as InsertContact);
   });
 
   return (
