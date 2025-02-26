@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from "wouter";
+import { useEffect } from "react";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -16,8 +17,15 @@ const loginSchema = z.object({
 type LoginData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const { loginMutation } = useAuth();
+  const { loginMutation, user } = useAuth();
   const [, setLocation] = useLocation();
+
+  // Redirect to admin dashboard if already logged in
+  useEffect(() => {
+    if (user) {
+      setLocation("/admin");
+    }
+  }, [user, setLocation]);
 
   const form = useForm<LoginData>({
     resolver: zodResolver(loginSchema),

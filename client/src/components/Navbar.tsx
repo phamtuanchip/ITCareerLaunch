@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -13,6 +14,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   const scrollToSection = (id: string) => {
     const element = document.querySelector(id);
@@ -41,6 +43,11 @@ export default function Navbar() {
                 {link.label}
               </Button>
             ))}
+            {user?.isAdmin === "true" && (
+              <Link href="/admin">
+                <Button variant="outline">Admin Dashboard</Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Navigation */}
@@ -62,6 +69,11 @@ export default function Navbar() {
                     {link.label}
                   </Button>
                 ))}
+                {user?.isAdmin === "true" && (
+                  <Link href="/admin">
+                    <Button variant="outline" className="w-full">Admin Dashboard</Button>
+                  </Link>
+                )}
               </div>
             </SheetContent>
           </Sheet>
