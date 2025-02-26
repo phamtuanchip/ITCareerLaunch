@@ -28,8 +28,9 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Contact</h3>
             <p className="text-muted-foreground">
-              Email: info@5minutes.edu<br />
-              Phone: (555) 123-4567
+              Email: info@5minutes.edu.vn<br />
+              Phone: +84.93111.9385<br />
+              Address: Dong Da, Ha Noi, Viet Nam
             </p>
           </div>
 
